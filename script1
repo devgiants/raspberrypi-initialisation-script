@@ -18,4 +18,4 @@ mkdir /tmp/raspi-config
 git clone https://github.com/RPi-Distro/raspi-config.git /tmp/raspi-config
 
 # Extend root FS
-sudo /tmp/raspi-config --expand-rootfs
+sudo /tmp/raspi-config/raspi-config --expand-rootfs
