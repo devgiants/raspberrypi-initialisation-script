@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Set groups for new user
+GROUPS="adm dialout cdrom sudo audio video plugdev games users input netdev gpio i2c spi"
+
+# create new user
+printf "Type in new username, followed by [ENTER]:"
+read username
+
+printf "Create user $username..."
+sudo useradd $username -m
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+# Get raspi-config
+printf "Create raspi-config...\n"
+rm -rf /tmp/raspi-config
+mkdir /tmp/raspi-config
+git clone https://github.com/RPi-Distro/raspi-config.git /tmp/raspi-config
+
+# Extend root FS
+sudo /tmp/raspi-config --expand-rootfs
