@@ -15,7 +15,22 @@ printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 printf "Create raspi-config...\n"
 rm -rf /tmp/raspi-config
 mkdir /tmp/raspi-config
-git clone https://github.com/RPi-Distro/raspi-config.git /tmp/raspi-config
+git clone https://github.com/devgiants/raspi-config.git /tmp/raspi-config
 
 # Extend root FS
 sudo /tmp/raspi-config/raspi-config --expand-rootfs
+
+# Rename hostname
+printf "Type in new hostname, followed by [ENTER]:"
+read NEW_HOSTNAME
+sudo /tmp/raspi-config/raspi-config --change-hostname=$NEW_HOSTNAME
+
+printf "Activate SSH server"
+sudo /tmp/raspi-config/raspi-config --ssh=1
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+#CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
+#printf "Type in new hostname, followed by [ENTER] (current: $CURRENT_HOSTNAME):"
+#read NEW_HOSTNAME
+#sudo echo $NEW_HOSTNAME > /etc/hostname
+#sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
