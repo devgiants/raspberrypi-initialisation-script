@@ -8,8 +8,10 @@ printf "Type in new username, followed by [ENTER]:"
 read username
 
 printf "Create user $username..."
-sudo useradd $username -m -G $GROUPS
+sudo useradd $username -m --groups $GROUPS
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+passwd nbonniot
 
 # Get raspi-config
 printf "Create raspi-config...\n"
@@ -30,7 +32,7 @@ sudo /tmp/raspi-config/raspi-config --ssh=1
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Change SSH port and allow only $username connections\n"
-sed -i 's/Port 22/Port 6061\nAllowUsers pi nbonniot/g' /etc/ssh/sshd_config
+sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 sudo reboot
