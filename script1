@@ -37,14 +37,13 @@ printf "Activate SSH server\n"
 sudo /tmp/raspi-config/raspi-config --ssh=1
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
+printf "Activate I2C on startup\n"
+sudo /tmp/raspi-config/raspi-config --i2c=1
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+
 printf "Change SSH port and allow only $username connections\n"
 sudo sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 sudo reboot
-
-#CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
-#printf "Type in new hostname, followed by [ENTER] (current: $CURRENT_HOSTNAME):"
-#read NEW_HOSTNAME
-#sudo echo $NEW_HOSTNAME > /etc/hostname
-#sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
