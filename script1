@@ -1,17 +1,23 @@
 #!/bin/sh
 
 # Set groups for new user
-GROUPS="adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi"
+NEW_USER_GROUPS="adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi"
 
 # create new user
 printf "Type in new username, followed by [ENTER]:"
 read username
 
 printf "Create user $username..."
-sudo useradd $username -G $GROUPS -m
+sudo useradd $username -G $NEW_USER_GROUPS -m
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-passwd nbonniot
+sudo passwd nbonniot
+
+# Copy all pi user home files to set it to new user
+sudo cp -R ~/* /home/$username/
+sudo cp -R ~/.* /home/$username/
+
+sudo chown -R $username:$username /home/$username
 
 # Get raspi-config
 printf "Create raspi-config...\n"
@@ -32,7 +38,7 @@ sudo /tmp/raspi-config/raspi-config --ssh=1
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Change SSH port and allow only $username connections\n"
-sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
+sudo sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 sudo reboot
