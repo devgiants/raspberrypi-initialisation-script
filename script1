@@ -8,7 +8,7 @@ printf "Type in new username, followed by [ENTER]:"
 read username
 
 printf "Create user $username..."
-sudo useradd $username -m --groups $GROUPS
+sudo useradd $username -G $GROUPS -m
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 passwd nbonniot
