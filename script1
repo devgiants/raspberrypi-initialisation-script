@@ -7,47 +7,59 @@ NEW_USER_GROUPS="adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,ne
 printf "Type in new username, followed by [ENTER]:"
 read username
 
-#printf "Create user $username..."
+printf "Create user $username..."
 sudo useradd $username -G $NEW_USER_GROUPS -m
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 sudo passwd nbonniot
 
 # Copy all pi user home files to set it to new user
+printf "Copy all pi user home files to $username home folder...\n"
 sudo cp -R ~/* /home/$username/
 sudo cp -R ~/.* /home/$username/
-
 sudo chown -R $username:$username /home/$username
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-# Get raspi-config
-printf "Create raspi-config...\n"
-rm -rf /tmp/raspi-config
-mkdir /tmp/raspi-config
-git clone https://github.com/devgiants/raspi-config.git /tmp/raspi-config
+# Set boot behavior to console
+printf "Set boot behavior to console, no login...\n"
+sudo raspi-config nonint do_boot_behaviour_new B1
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+
+# Wait for network to init
+printf "Set system to ait for network to init...\n"
+sudo raspi-config nonint do_wait_for_network Slow
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
 
 # Extend root FS
-sudo /tmp/raspi-config/raspi-config --expand-rootfs
+printf "Expand root FS to fill all memory card...\n"
+sudo raspi-config nonint do_expand_rootfs
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
 
 # Rename hostname
 printf "Type in new hostname, followed by [ENTER]:"
 read NEW_HOSTNAME
-sudo /tmp/raspi-config/raspi-config --change-hostname=$NEW_HOSTNAME
-
-printf "Activate SSH server\n"
-sudo /tmp/raspi-config/raspi-config --ssh=1
+sudo raspi-config nonint do_change_hostname $NEW_HOSTNAME
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-printf "Change SSH port and allow only $username connections\n"
+
+printf "Activate SSH server...\n"
+sudo raspi-config nonint do_ssh 0
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+printf "Change SSH port and allow only $username connections...\n"
 sudo sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-printf "Activate I2C on startup\n"
-sudo /tmp/raspi-config/raspi-config --i2c=1
+printf "Activate I2C on startup...\n"
+sudo raspi-config nonint do_i2c 0
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-printf "Activate SPI on startup\n"
-sudo /tmp/raspi-config/raspi-config --spi=1
+printf "Activate SPI on startup...\n"
+sudo raspi-config nonint do_spi 0
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-
+printf "REBOOT\n"
 sudo reboot
