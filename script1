@@ -75,7 +75,7 @@ sudo raspi-config nonint do_ssh 0
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Change SSH port and allow only $username connections...\n"
-if [ -z "$port" ]; then
+if [ -z "$ssh_port" ]; then
 	printf "Type in new SSH port [6061]:"
         read ssh_port
 fi
