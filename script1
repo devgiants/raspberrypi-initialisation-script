@@ -59,5 +59,6 @@ read NEW_HOSTNAME
 sudo raspi-config nonint do_change_hostname $NEW_HOSTNAME
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
-printf "REBOOT\n"
-sudo reboot
+# No reboot so far, as it is planned to be runned by https://github.com/devgiants/raspberry-configuration
+#printf "REBOOT\n"
+#sudo reboot
