@@ -1,11 +1,47 @@
 #!/bin/sh
 
+ 
+function usage(){
+	printf "Script options :\n"
+	printf "\t-H	: specify new hostname.\n"
+        printf "\t-u    : specify new username.\n"
+	printf "\t-p 	: specify new SSH port.\n"
+	printf "\t-h    : display this.\n"
+}
+
+
+#while true ; do
+while getopts ":hu:p:H:" option; do
+    case "$option" in
+	h)     
+		usage; 
+		exit 0
+		;;
+        u)   
+		username=$OPTARG
+		echo $username
+		;;
+        p)   
+                ssh_port=$OPTARG
+                echo $ssh_port
+                ;;
+        H)   
+                hostname=$OPTARG
+                echo $hostname
+                ;;
+        --)              
+		break;; # end of options
+    esac
+done
+
 # Set groups for new user
 NEW_USER_GROUPS="adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi"
 
 # create new user
-printf "Type in new username, followed by [ENTER]:"
-read username
+if [ -z "$username" ]; then
+	printf "Type in new username, followed by [ENTER]:"
+	read username
+fi
 
 printf "Create user $username..."
 sudo useradd $username -G $NEW_USER_GROUPS -m
@@ -42,7 +78,13 @@ sudo raspi-config nonint do_ssh 0
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Change SSH port and allow only $username connections...\n"
-sudo sed -i 's/Port 22/Port 6061\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
+if [ -z "$port" ]; then
+	printf "Type in new SSH port [6061]:"
+        read port
+fi
+port=${port:=6061}
+
+sudo sed -i 's/Port 22/Port $port\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Activate I2C on startup...\n"
@@ -54,9 +96,12 @@ sudo raspi-config nonint do_spi 0
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 # Rename hostname
-printf "Type in new hostname, followed by [ENTER]:"
-read NEW_HOSTNAME
-sudo raspi-config nonint do_change_hostname $NEW_HOSTNAME
+if [ -z "$hostname" ]; then
+	printf "Type in new hostname, followed by [ENTER]:"
+	read hostname
+fi
+
+sudo raspi-config nonint do_change_hostname $hostname
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 # No reboot so far, as it is planned to be runned by https://github.com/devgiants/raspberry-configuration
