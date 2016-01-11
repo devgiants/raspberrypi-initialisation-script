@@ -80,11 +80,11 @@ printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 printf "Change SSH port and allow only $username connections...\n"
 if [ -z "$port" ]; then
 	printf "Type in new SSH port [6061]:"
-        read port
+        read ssh_port
 fi
-port=${port:=6061}
+port=${ssh_port:=6061}
 
-sudo sed -i 's/Port 22/Port $port\nAllowUsers nbonniot/g' /etc/ssh/sshd_config
+sudo sed -i "s/Port 22/Port $ssh_port\nAllowUsers $username/g" /etc/ssh/sshd_config
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Activate I2C on startup...\n"
