@@ -27,7 +27,7 @@ printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 
 # Wait for network to init
-printf "Set system to ait for network to init...\n"
+printf "Set system to wait for network to init...\n"
 sudo raspi-config nonint do_wait_for_network Slow
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
@@ -36,14 +36,6 @@ printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 printf "Expand root FS to fill all memory card...\n"
 sudo raspi-config nonint do_expand_rootfs
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
-
-
-# Rename hostname
-printf "Type in new hostname, followed by [ENTER]:"
-read NEW_HOSTNAME
-sudo raspi-config nonint do_change_hostname $NEW_HOSTNAME
-printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
-
 
 printf "Activate SSH server...\n"
 sudo raspi-config nonint do_ssh 0
@@ -59,6 +51,12 @@ printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "Activate SPI on startup...\n"
 sudo raspi-config nonint do_spi 0
+printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
+
+# Rename hostname
+printf "Type in new hostname, followed by [ENTER]:"
+read NEW_HOSTNAME
+sudo raspi-config nonint do_change_hostname $NEW_HOSTNAME
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
 printf "REBOOT\n"
