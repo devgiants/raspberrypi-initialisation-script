@@ -19,15 +19,12 @@ while getopts ":hu:p:H:" option; do
 		;;
         u)   
 		username=$OPTARG
-		echo $username
 		;;
         p)   
                 ssh_port=$OPTARG
-                echo $ssh_port
                 ;;
         H)   
                 hostname=$OPTARG
-                echo $hostname
                 ;;
         --)              
 		break;; # end of options
