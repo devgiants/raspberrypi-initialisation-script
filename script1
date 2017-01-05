@@ -42,6 +42,7 @@ fi
 
 printf "Create user $username..."
 sudo useradd $username -G $NEW_USER_GROUPS -m
+printf "\n"
 
 sudo passwd "$username"
 
@@ -92,6 +93,7 @@ if [ -z "$hostname" ]; then
 	read hostname
 fi
 
+printf "Change hostname to $hostname...\n"
 sudo raspi-config nonint do_hostname $hostname
 printf "\e[1m\e[32mDONE\e[39m\e[21m\n"
 
